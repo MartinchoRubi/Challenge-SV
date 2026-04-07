@@ -78,7 +78,6 @@ Controles tecnicos incorporados: autenticacion por API key, timeout por request,
 ## Agentes de IA utilizados
 
 - LLM de enriquecimiento: OpenRouter (modelo por defecto `google/gemma-3-4b-it:free`), usado para generar `operational_summary`.
-- Asistencia de desarrollo: Cursor AI para acelerar iteraciones de codigo, runbooks y verificacion tecnica.
 
 ## Resultados esperados
 
