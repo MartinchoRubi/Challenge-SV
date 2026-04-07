@@ -1,0 +1,37 @@
+flowchart LR
+    API[Public API<br/>Open-Meteo]
+
+    subgraph OPER[Operative Data Layer]
+      EV[EventBridge Scheduler]
+      PIPE[Lambda Pipeline]
+      Q[SQS Queue]
+    end
+
+    subgraph LH[Lakehouse - Medallion]
+      B[S3 Bronze<br/>raw NDJSON]
+      S[S3 Silver<br/>curated Parquet]
+      G[S3 Gold<br/>operational marts]
+    end
+
+    subgraph CONS[Consumption]
+      SRV[Lambda Serving]
+      APIGW[API Gateway]
+      ATH[Athena]
+    end
+
+    subgraph OBS[Observability & Security]
+      CW[CloudWatch]
+      SM[Secrets Manager]
+    end
+
+    API --> EV --> PIPE
+    PIPE --> B --> S --> G
+    S --> Q
+    Q --> ENR[ECS Fargate Enricher]
+    ENR --> LLM[OpenRouter LLM]
+    ENR --> S
+    G --> ATH
+    G --> SRV --> APIGW
+    CW --- PIPE
+    CW --- SRV
+    SM --- ENR

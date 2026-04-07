@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 z" fill="#f59e0b"/>
+    </marker>
+    <style>
+      .title { font: 700 34px Arial, sans-serif; fill: #f8fafc; }
+      .sub { font: 400 15px Arial, sans-serif; fill: #cbd5e1; }
+      .sec { font: 700 17px Arial, sans-serif; fill: #e2e8f0; }
+      .box { fill: #111827; stroke: #334155; stroke-width: 2; rx: 16; ry: 16; }
+      .box2 { fill: #0f172a; stroke: #38bdf8; stroke-width: 2; rx: 16; ry: 16; }
+      .box3 { fill: #0f172a; stroke: #4ade80; stroke-width: 2; rx: 16; ry: 16; }
+      .txt1 { font: 700 16px Arial, sans-serif; fill: #f8fafc; }
+      .txt2 { font: 400 13px Arial, sans-serif; fill: #cbd5e1; }
+      .tag { font: 700 12px Arial, sans-serif; fill: #f59e0b; }
+    </style>
+  </defs>
+
+  <rect width="1800" height="980" fill="url(#bg)"/>
+  <text x="60" y="62" class="title">SPV DataOps Challenge - Operational Lakehouse Architecture</text>
+  <text x="60" y="90" class="sub">Current implementation + target modular/event-driven evolution</text>
+
+  <text x="70" y="140" class="sec">Operational Data Layer</text>
+  <text x="640" y="140" class="sec">Lakehouse (Medallion)</text>
+  <text x="1240" y="140" class="sec">Consumption &amp; Observability</text>
+
+  <!-- Current -->
+  <rect x="50" y="165" width="1680" height="360" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="6 6"/>
+  <text x="68" y="190" class="tag">CURRENT (IMPLEMENTED)</text>
+
+  <rect x="70" y="220" width="230" height="95" class="box"/>
+  <text x="90" y="252" class="txt1">Public API</text>
+  <text x="90" y="274" class="txt2">Open-Meteo (weather + geocoding)</text>
+
+  <rect x="340" y="220" width="240" height="95" class="box"/>
+  <text x="360" y="252" class="txt1">EventBridge Scheduler</text>
+  <text x="360" y="274" class="txt2">Periodic trigger</text>
+
+  <rect x="340" y="355" width="240" height="105" class="box"/>
+  <text x="360" y="387" class="txt1">Lambda Pipeline</text>
+  <text x="360" y="409" class="txt2">Ingestion + curation + gold snapshot</text>
+
+  <rect x="640" y="215" width="520" height="250" class="box2"/>
+  <text x="665" y="245" class="txt1">Amazon S3 Lakehouse</text>
+  <rect x="670" y="270" width="460" height="52" class="box"/>
+  <text x="690" y="302" class="txt1">Bronze - NDJSON (raw)</text>
+  <rect x="670" y="333" width="460" height="52" class="box"/>
+  <text x="690" y="365" class="txt1">Silver - Parquet (validated/typed)</text>
+  <rect x="670" y="396" width="460" height="52" class="box"/>
+  <text x="690" y="428" class="txt1">Gold - Parquet/JSON (operational mart)</text>
+
+  <rect x="1230" y="220" width="230" height="95" class="box3"/>
+  <text x="1250" y="252" class="txt1">Lambda Serving</text>
+  <text x="1250" y="274" class="txt2">Reads latest gold snapshot</text>
+
+  <rect x="1490" y="220" width="220" height="95" class="box3"/>
+  <text x="1510" y="252" class="txt1">API Gateway</text>
+  <text x="1510" y="274" class="txt2">/health and /latest</text>
+
+  <rect x="1230" y="355" width="230" height="95" class="box3"/>
+  <text x="1250" y="387" class="txt1">OpenRouter LLM</text>
+  <text x="1250" y="409" class="txt2">Gemma/Gemini enrichment</text>
+
+  <rect x="1490" y="355" width="220" height="95" class="box3"/>
+  <text x="1510" y="387" class="txt1">CloudWatch</text>
+  <text x="1510" y="409" class="txt2">Logs and metrics</text>
+
+  <!-- Target -->
+  <rect x="50" y="550" width="1680" height="360" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="6 6"/>
+  <text x="68" y="575" class="tag">TARGET (MODULAR / SCALABLE)</text>
+
+  <rect x="70" y="610" width="250" height="95" class="box"/>
+  <text x="90" y="642" class="txt1">SQS Event Bus</text>
+  <text x="90" y="664" class="txt2">Decoupled propagation</text>
+
+  <rect x="350" y="610" width="250" height="95" class="box"/>
+  <text x="370" y="642" class="txt1">Step Functions</text>
+  <text x="370" y="664" class="txt2">Pipeline orchestration</text>
+
+  <rect x="640" y="610" width="250" height="95" class="box2"/>
+  <text x="660" y="642" class="txt1">Glue Jobs</text>
+  <text x="660" y="664" class="txt2">Batch transforms</text>
+
+  <rect x="920" y="610" width="250" height="95" class="box2"/>
+  <text x="940" y="642" class="txt1">Glue Catalog</text>
+  <text x="940" y="664" class="txt2">Metadata + schema</text>
+
+  <rect x="1200" y="610" width="250" height="95" class="box3"/>
+  <text x="1220" y="642" class="txt1">ECS Fargate Enricher</text>
+  <text x="1220" y="664" class="txt2">Consumer container</text>
+
+  <rect x="1480" y="610" width="250" height="95" class="box3"/>
+  <text x="1500" y="642" class="txt1">Secrets Manager</text>
+  <text x="1500" y="664" class="txt2">Key rotation + secure config</text>
+
+  <!-- Arrows current -->
+  <path d="M300 268 L340 268" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M460 315 L460 355" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M580 408 L640 300" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M580 408 L640 360" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M580 408 L640 420" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1160 420 L1230 268" stroke="#4ade80" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1460 268 L1490 268" stroke="#4ade80" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1160 360 L1230 402" stroke="#4ade80" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Arrows target -->
+  <path d="M320 658 L350 658" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M600 658 L640 658" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M890 658 L920 658" stroke="#38bdf8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1170 658 L1200 658" stroke="#4ade80" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1450 658 L1480 658" stroke="#4ade80" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+</svg>

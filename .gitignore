@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+htmlcov/
+.env
+artifacts/
+# Runtime outputs (not versioned). Evidence is committed under docs/samples/.
+local_data/
+*.pyc
+.DS_Store

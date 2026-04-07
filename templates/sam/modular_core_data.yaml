@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SPV DataOps Challenge - core data layer (buckets)
+
+Parameters:
+  RawBucketName:
+    Type: String
+  CuratedBucketName:
+    Type: String
+
+Resources:
+  RawBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref RawBucketName
+      VersioningConfiguration:
+        Status: Enabled
+
+  CuratedBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref CuratedBucketName
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  RawBucketOutput:
+    Value: !Ref RawBucket
+  CuratedBucketOutput:
+    Value: !Ref CuratedBucket

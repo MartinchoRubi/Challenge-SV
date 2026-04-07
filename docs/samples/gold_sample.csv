@@ -1,0 +1,2 @@
+run_ts_utc,city_count,avg_temperature_2m,avg_relative_humidity_2m,avg_wind_speed_10m,run_id,run_hour_utc
+2026-04-07 14:05:56.582255+00:00,1,17.1,92.0,20.3,20260407T140556Z,14:05:56

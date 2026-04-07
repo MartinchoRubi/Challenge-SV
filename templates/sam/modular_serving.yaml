@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SPV DataOps Challenge - serving layer (API + lambda)
+
+Parameters:
+  CuratedBucketName:
+    Type: String
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 30
+    MemorySize: 512
+    Architectures:
+      - x86_64
+    Tracing: Active
+
+Resources:
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-operational-serving"
+      CodeUri: ../../
+      Handler: src.aws.serving_lambda.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref CuratedBucketName
+      Environment:
+        Variables:
+          GOLD_KEY: gold/weather_operational_mart.json
+      Events:
+        Latest:
+          Type: HttpApi
+          Properties:
+            Path: /latest
+            Method: GET
+        Health:
+          Type: HttpApi
+          Properties:
+            Path: /health
+            Method: GET
+
+Outputs:
+  HttpApiEndpoint:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"

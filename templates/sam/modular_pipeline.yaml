@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SPV DataOps Challenge - pipeline layer (scheduler + pipeline lambda)
+
+Parameters:
+  RawBucketName:
+    Type: String
+  CuratedBucketName:
+    Type: String
+  ScheduleExpression:
+    Type: String
+    Default: rate(15 minutes)
+  GeminiApiKey:
+    Type: String
+    NoEcho: true
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 60
+    MemorySize: 512
+    Architectures:
+      - x86_64
+    Tracing: Active
+    Environment:
+      Variables:
+        RAW_BUCKET: !Ref RawBucketName
+        CURATED_BUCKET: !Ref CuratedBucketName
+        GEMINI_API_KEY: !Ref GeminiApiKey
+        OPENROUTER_API_KEY: !Ref GeminiApiKey
+        OPENROUTER_MODEL: google/gemma-3-4b-it:free
+
+Resources:
+  PipelineFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-pipeline"
+      CodeUri: ../../
+      Handler: src.aws.publisher_lambda.handler
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref RawBucketName
+        - S3WritePolicy:
+            BucketName: !Ref CuratedBucketName
+      Events:
+        Schedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: !Ref ScheduleExpression
+
+Outputs:
+  PipelineFunctionName:
+    Value: !Ref PipelineFunction

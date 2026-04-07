@@ -1,0 +1,129 @@
+<mxfile host="app.diagrams.net" modified="2026-04-06T00:00:00.000Z" agent="spv" version="20.8.23" type="device">
+  <diagram id="aws-arch" name="Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Groups -->
+        <mxCell id="g_sources" value="Sources" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#555555;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="170" height="260" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="g_ingest" value="Ingestion &amp; Orchestration" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#555555;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="250" y="90" width="260" height="260" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="g_lake" value="Lakehouse (Medallion)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#555555;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="540" y="70" width="300" height="300" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="g_consume" value="Consumption" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#555555;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="880" y="90" width="250" height="260" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="g_obs" value="Observability &amp; Security" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#555555;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="250" y="380" width="880" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- Icons (AWS4 shapes in diagrams.net) -->
+        <mxCell id="src_api" value="Public API" style="shape=mxgraph.aws4.internet;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_sources">
+          <mxGeometry x="40" y="50" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="src_db" value="DB" style="shape=mxgraph.aws4.database;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_sources">
+          <mxGeometry x="40" y="140" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="src_events" value="Events" style="shape=mxgraph.aws4.eventbridge;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_sources">
+          <mxGeometry x="40" y="220" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="evb" value="EventBridge" style="shape=mxgraph.aws4.eventbridge;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_ingest">
+          <mxGeometry x="30" y="40" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="lambda_ing" value="Lambda (ingest)" style="shape=mxgraph.aws4.lambda;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_ingest">
+          <mxGeometry x="120" y="40" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="sfn" value="Step Functions" style="shape=mxgraph.aws4.step_functions;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_ingest">
+          <mxGeometry x="210" y="40" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="sqs" value="SQS" style="shape=mxgraph.aws4.sqs;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_ingest">
+          <mxGeometry x="120" y="140" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="glue" value="Glue Jobs" style="shape=mxgraph.aws4.glue;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_ingest">
+          <mxGeometry x="210" y="140" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s3_bronze" value="S3 Bronze" style="shape=mxgraph.aws4.s3;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_lake">
+          <mxGeometry x="30" y="70" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_silver" value="S3 Silver" style="shape=mxgraph.aws4.s3;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_lake">
+          <mxGeometry x="120" y="70" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_gold" value="S3 Gold" style="shape=mxgraph.aws4.s3;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_lake">
+          <mxGeometry x="210" y="70" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="catalog" value="Glue Catalog" style="shape=mxgraph.aws4.glue_data_catalog;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_lake">
+          <mxGeometry x="120" y="170" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="athena" value="Athena" style="shape=mxgraph.aws4.athena;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_lake">
+          <mxGeometry x="210" y="170" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="apigw" value="API Gateway" style="shape=mxgraph.aws4.api_gateway;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_consume">
+          <mxGeometry x="30" y="40" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="lambda_srv" value="Lambda (serving)" style="shape=mxgraph.aws4.lambda;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_consume">
+          <mxGeometry x="120" y="40" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="dash" value="Analytics" style="shape=mxgraph.aws4.quicksight;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_consume">
+          <mxGeometry x="120" y="140" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="fargate" value="Fargate (LLM)" style="shape=mxgraph.aws4.fargate;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_consume">
+          <mxGeometry x="210" y="40" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cw" value="CloudWatch" style="shape=mxgraph.aws4.cloudwatch;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_obs">
+          <mxGeometry x="40" y="60" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="iam" value="IAM" style="shape=mxgraph.aws4.iam;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_obs">
+          <mxGeometry x="150" y="60" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="kms" value="KMS" style="shape=mxgraph.aws4.kms;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="g_obs">
+          <mxGeometry x="260" y="60" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="src_api" target="evb">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="evb" target="lambda_ing">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="lambda_ing" target="s3_bronze">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="s3_bronze" target="sfn">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="sfn" target="glue">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="glue" target="s3_silver">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="s3_silver" target="s3_gold">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="s3_gold" target="athena">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="athena" target="dash">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" style="endArrow=block;html=1;strokeColor=#444444;" edge="1" parent="1" source="apigw" target="lambda_srv">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
