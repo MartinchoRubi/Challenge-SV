@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from datetime import datetime, timezone
 
 import boto3
 import requests
 
 from src.ingestion.public_api_ingestor import fetch_weather
+
+MAX_LLM_RETRIES = 3
 
 
 def gemini_summary(api_key: str, city: str, temperature: float | None, humidity: float | None, wind: float | None) -> str:
@@ -17,23 +20,39 @@ def gemini_summary(api_key: str, city: str, temperature: float | None, humidity:
         "Be concrete, no marketing tone. "
         f"City={city}, temperature={temperature}, humidity={humidity}, wind={wind}."
     )
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.2,
-            "max_tokens": 80,
-        },
-        timeout=30,
-    )
-    response.raise_for_status()
-    payload = response.json()
-    return (payload["choices"][0]["message"]["content"] or "").strip()
+    last_error: Exception | None = None
+    for attempt in range(1, MAX_LLM_RETRIES + 1):
+        try:
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": model,
+                    "messages": [{"role": "user", "content": prompt[:600]}],
+                    "temperature": 0.2,
+                    "max_tokens": 80,
+                },
+                timeout=30,
+            )
+            response.raise_for_status()
+            payload = response.json()
+            usage = payload.get("usage") or {}
+            if usage:
+                print(
+                    f"LLM usage model={model} "
+                    f"prompt_tokens={usage.get('prompt_tokens')} "
+                    f"completion_tokens={usage.get('completion_tokens')} "
+                    f"total_tokens={usage.get('total_tokens')}"
+                )
+            return (payload["choices"][0]["message"]["content"] or "").strip()
+        except Exception as exc:
+            last_error = exc
+            print(f"LLM call failed attempt={attempt}/{MAX_LLM_RETRIES} error={exc}")
+            time.sleep(attempt)
+    raise RuntimeError("LLM enrichment failed after retries") from last_error
 
 
 def handler(event, context):  # noqa: ANN001

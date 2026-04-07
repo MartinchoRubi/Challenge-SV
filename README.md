@@ -73,6 +73,7 @@ API local:
 Este repo requiere `OPENROUTER_API_KEY` (o `GEMINI_API_KEY`) para ejecutar `src/enrichment/gemini_enricher.py`.
 Sin key, enrichment falla con error explicito.
 Modelo por defecto validado: `google/gemma-3-4b-it:free` via OpenRouter.
+Controles tecnicos incorporados: autenticacion por API key, timeout por request, reintentos con backoff, limite de `max_tokens` y logging de uso de tokens.
 
 ## Agentes de IA utilizados
 

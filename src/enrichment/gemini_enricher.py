@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import time
+
 import pandas as pd
 import requests
 
@@ -10,29 +12,48 @@ from src.common.logger import get_logger
 LOGGER = get_logger(__name__)
 INPUT_FILE = SILVER_DIR / "weather_curated.parquet"
 OUTPUT_FILE = ENRICHED_DIR / "weather_curated_enriched.parquet"
+MAX_LLM_RETRIES = 3
 
 
 def gemini_summary(prompt: str) -> str:
     api_key = settings.openrouter_api_key or settings.gemini_api_key
     if not api_key:
         raise ValueError("Missing OPENROUTER_API_KEY or GEMINI_API_KEY.")
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": settings.openrouter_model,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.2,
-            "max_tokens": 80,
-        },
-        timeout=30,
-    )
-    response.raise_for_status()
-    payload = response.json()
-    return payload["choices"][0]["message"]["content"].strip()
+    payload = {
+        "model": settings.openrouter_model,
+        "messages": [{"role": "user", "content": prompt[:600]}],
+        "temperature": 0.2,
+        "max_tokens": 80,
+    }
+    last_error: Exception | None = None
+    for attempt in range(1, MAX_LLM_RETRIES + 1):
+        try:
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=30,
+            )
+            response.raise_for_status()
+            data = response.json()
+            usage = data.get("usage") or {}
+            if usage:
+                LOGGER.info(
+                    "LLM usage model=%s prompt_tokens=%s completion_tokens=%s total_tokens=%s",
+                    settings.openrouter_model,
+                    usage.get("prompt_tokens"),
+                    usage.get("completion_tokens"),
+                    usage.get("total_tokens"),
+                )
+            return data["choices"][0]["message"]["content"].strip()
+        except Exception as exc:
+            last_error = exc
+            LOGGER.warning("LLM call failed. attempt=%s/%s error=%s", attempt, MAX_LLM_RETRIES, exc)
+            time.sleep(attempt)
+    raise RuntimeError("LLM enrichment failed after retries") from last_error
 
 
 def run(input_file: str | None = None) -> str:
